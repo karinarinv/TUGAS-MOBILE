@@ -6,10 +6,10 @@ class HomePage extends StatelessWidget {
   // Data kelompok disimpan statis di sini.
   // Ganti sesuai anggota kelompok kamu masing-masing.
   final List<Map<String, String>> anggota = const [
-    {'role': 'Anggota 1', 'nama': 'Putri Karina Tumanggor', 'NIM': '124240047'},
-    {'role': 'Anggota 2', 'nama': 'Rachma Alycia Nugrahanto', 'NIM': '124240072'},
-    {'role': 'Anggota 3', 'nama': 'Flavia Domitilla Alva Anggita', 'NIM': '124240123'},
-    {'role': 'Anggota 4', 'nama': 'Aleyda Azkia Firani Masyithah', 'NIM': '124240130'},
+    {'role': 'Anggota 1', 'nama': 'Putri Karina Tumanggor', 'nim': '124240047'},
+    {'role': 'Anggota 2', 'nama': 'Rachma Alycia Nugrahanto', 'nim': '124240072'},
+    {'role': 'Anggota 3', 'nama': 'Flavia Domitilla Alva Anggita', 'nim': '124240123'},
+    {'role': 'Anggota 4', 'nama': 'Aleyda Azkia Firani Masyithah', 'nim': '124240130'},
   ];
 
   @override
