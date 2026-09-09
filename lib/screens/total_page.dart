@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Menu ini menjumlahkan DIGIT dari satu angka yang diketik
-/// di dalam satu field input, sesuai bunyi soal:
-/// "Menu Jumlah total angka dalam suatu field input data"
-/// contoh: input "2547" -> 2 + 5 + 4 + 7 = 18
 class TotalPage extends StatefulWidget {
   const TotalPage({super.key});
 
@@ -13,32 +9,43 @@ class TotalPage extends StatefulWidget {
 
 class _TotalPageState extends State<TotalPage> {
   final TextEditingController _controller = TextEditingController();
+  List<int> _extractedNumbers = [];
   int? _hasilTotal;
   String? _errorText;
 
-  int _jumlahkanDigit(String input) {
-    int total = 0;
-    for (int i = 0; i < input.length; i++) {
-      final digit = int.tryParse(input[i]);
-      if (digit != null) {
-        total += digit;
-      }
-    }
-    return total;
-  }
-
   void _hitungTotal() {
     final input = _controller.text.trim();
-    if (input.isEmpty || int.tryParse(input) == null) {
+
+    if (input.isEmpty) {
       setState(() {
-        _errorText = 'Masukkan angka yang valid';
+        _errorText = 'Masukkan teks atau angka terlebih dahulu';
         _hasilTotal = null;
+        _extractedNumbers = [];
       });
       return;
     }
+
+    // Mengambil semua digit angka (0-9) dari teks input
+    RegExp regExp = RegExp(r'\d');
+    Iterable<Match> matches = regExp.allMatches(input);
+
+    List<int> numbers = matches.map((m) => int.parse(m.group(0)!)).toList();
+
+    if (numbers.isEmpty) {
+      setState(() {
+        _errorText = 'Tidak ada angka yang ditemukan dalam input';
+        _hasilTotal = null;
+        _extractedNumbers = [];
+      });
+      return;
+    }
+
+    int total = numbers.reduce((a, b) => a + b);
+
     setState(() {
       _errorText = null;
-      _hasilTotal = _jumlahkanDigit(input);
+      _extractedNumbers = numbers;
+      _hasilTotal = total;
     });
   }
 
@@ -50,92 +57,177 @@ class _TotalPageState extends State<TotalPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Jumlah Total',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          // Header Judul
+          Row(
+            children: const [
+              Text(
+                'Jumlah Total',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              SizedBox(width: 6),
+              Text('✨', style: TextStyle(fontSize: 20)),
+            ],
           ),
+          const SizedBox(height: 2),
           const Text(
-            'Menjumlahkan digit dari angka yang diketik',
-            style: TextStyle(color: Colors.grey),
+            'tambahkan angka satu per satu atau dari kalimat',
+            style: TextStyle(color: Colors.grey, fontSize: 13),
           ),
           const SizedBox(height: 20),
+
+          // Label Input
           const Text(
-            'Input Bilangan',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            'input bilangan',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+              color: Color(0xFFC2185B),
+            ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
+
+          // TextField Input
           TextField(
             controller: _controller,
-            keyboardType: TextInputType.number,
+            keyboardType: TextInputType.text,
+            style: const TextStyle(fontSize: 14),
             decoration: InputDecoration(
-              hintText: 'contoh: 2547',
+              hintText: 'contoh: 12 atau Saya beli 2 apel dan 5 jeruk',
+              hintStyle: TextStyle(color: Colors.pink.shade200, fontSize: 13),
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Colors.pink.shade100),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Colors.pink.shade100),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(color: Color(0xFFE91E63), width: 1.5),
               ),
               errorText: _errorText,
             ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
+
+          // Tombol Jumlahkan
           SizedBox(
             width: double.infinity,
+            height: 50,
             child: ElevatedButton(
               onPressed: _hitungTotal,
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                backgroundColor: Colors.pink[300],
+                backgroundColor: const Color(0xFFEC407A),
                 foregroundColor: Colors.white,
+                elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              child: const Text('Hitung Jumlah'),
+              child: const Text(
+                'Jumlahkan',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
           const SizedBox(height: 24),
-          if (_hasilTotal != null)
+
+          // Tampilan Hasil (Chip Angka & Card Total)
+          if (_hasilTotal != null) ...[
+            const Text(
+              'angka yang sudah dimasukkan',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            // Daftar Chip Angka
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: _extractedNumbers.map((numVal) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFCE4EC), // Soft pink
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    '$numVal',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFC2185B),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 24),
+
+            // Card Result Gradient
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 20),
               decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
                 gradient: const LinearGradient(
-                  colors: [Color(0xFFFFE1EC), Color(0xFFF1EAFF)],
+                  colors: [
+                    Color(0xFFFFF0F5),
+                    Color(0xFFF3E5F5),
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
                 children: [
-                  Text(
+                  const Text(
                     'TOTAL KESELURUHAN',
                     style: TextStyle(
-                      fontSize: 11,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: Colors.pink[400],
-                      letterSpacing: 0.5,
+                      color: Color(0xFFD81B60),
+                      letterSpacing: 0.8,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 10),
                   Text(
                     '$_hasilTotal',
                     style: const TextStyle(
-                      fontSize: 40,
+                      fontSize: 44,
                       fontWeight: FontWeight.bold,
+                      color: Color(0xFF2C2C2C),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 10),
                   Text(
-                    'dari angka ${_controller.text}',
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    'dari ${_extractedNumbers.length} angka yang dimasukkan',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
                   ),
                 ],
               ),
             ),
+          ],
         ],
       ),
     );
