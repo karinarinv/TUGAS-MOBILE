@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  // Data kelompok disimpan statis di sini.
-  // Ganti sesuai anggota kelompok kamu masing-masing.
+  // Data kelompok kami ges
   final List<Map<String, String>> anggota = const [
     {'role': 'Anggota 1', 'nama': 'Putri Karina Tumanggor', 'nim': '124240047'},
     {'role': 'Anggota 2', 'nama': 'Rachma Alycia Nugrahanto', 'nim': '124240072'},
@@ -39,7 +38,7 @@ class HomePage extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.pink[50],
                     borderRadius: BorderRadius.circular(16),
-                  ),
+                  ),  
                   child: Row(
                     children: [
                       CircleAvatar(
