@@ -57,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.pink[50],
+      backgroundColor: Colors.deepPurple[50],
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -72,11 +72,11 @@ class _LoginPageState extends State<LoginPage> {
                     width: 80,
                     height: 80,
                     decoration: BoxDecoration(
-                      color: Colors.pink[300],
+                      color: Colors.deepPurple[300],
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.pink.withOpacity(0.3),
+                          color: Colors.deepPurple.withOpacity(0.3),
                           blurRadius: 16,
                           offset: const Offset(0, 8),
                         ),
@@ -129,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                             labelText: 'Username',
                             prefixIcon: const Icon(Icons.person_outline),
                             filled: true,
-                            fillColor: Colors.pink[50],
+                            fillColor: Colors.deepPurple[50],
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide.none,
@@ -157,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                               },
                             ),
                             filled: true,
-                            fillColor: Colors.pink[50],
+                            fillColor: Colors.deepPurple[50],
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide.none,
@@ -188,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: _login,
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
-                            backgroundColor: Colors.pink[300],
+                            backgroundColor: Colors.deepPurple[300],
                             foregroundColor: Colors.white,
                             elevation: 0,
                             shape: RoundedRectangleBorder(

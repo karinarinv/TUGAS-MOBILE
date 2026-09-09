@@ -11,10 +11,10 @@ void main() {
 
 // Warna utama aplikasi, dipakai bersama di semua halaman
 class AppColors {
-  static const Color blue = Color(0xFF3B6FE0);
-  static const Color blueLight = Color(0xFFEAF1FF);
-  static const Color pink = Color(0xFFE0568A);
-  static const Color pinkLight = Color(0xFFFCE8F0);
+  static const Color blue = Color(0xFF6C4FE0);       // ungu utama
+  static const Color blueLight = Color(0xFFF0EAFF);  // ungu muda (background/soft)
+  static const Color pink = Color(0xFF9B5DE5);        // ungu aksen (lebih terang)
+  static const Color pinkLight = Color(0xFFF3E8FC);   // ungu aksen muda
   static const Color background = Color(0xFFFAFAFC);
   static const Color textPrimary = Color(0xFF262832);
   static const Color textSecondary = Color(0xFF8A8D98);
@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         scaffoldBackgroundColor: AppColors.background,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 194, 212, 249),
-          primary: const Color.fromARGB(255, 165, 194, 255),
+          seedColor: const Color(0xFF6C4FE0),
+          primary: const Color(0xFF8B6FF0),
           secondary: AppColors.pink,
         ),
         appBarTheme: const AppBarTheme(

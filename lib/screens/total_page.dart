@@ -1,3 +1,4 @@
+// total_page.dart
 import 'package:flutter/material.dart';
 
 class TotalPage extends StatefulWidget {
@@ -25,7 +26,6 @@ class _TotalPageState extends State<TotalPage> {
       return;
     }
 
-    // Mengambil semua digit angka (0-9) dari teks input
     RegExp regExp = RegExp(r'\d');
     Iterable<Match> matches = regExp.allMatches(input);
 
@@ -62,102 +62,93 @@ class _TotalPageState extends State<TotalPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Judul
-          Row(
-            children: const [
-              Text(
-                'Jumlah Total',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              SizedBox(width: 6),
-              
-            ],
+          Text(
+            'Jumlah Total',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.deepPurple[900],
+            ),
           ),
           const SizedBox(height: 2),
-          const Text(
-            'tambahkan angka satu per satu atau dari kalimat',
-            style: TextStyle(color: Colors.grey, fontSize: 13),
+          Text(
+            'Tambahkan angka satu per satu atau dari kalimat',
+            style: TextStyle(fontSize: 13, color: Colors.deepPurple[300]),
           ),
           const SizedBox(height: 20),
 
-          // Label Input
-          const Text(
-            'input bilangan',
+          Text(
+            'Input Bilangan',
             style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-              color: Color(0xFFC2185B),
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              color: Colors.deepPurple[700],
             ),
           ),
           const SizedBox(height: 8),
 
-          // TextField Input
           TextField(
             controller: _controller,
             keyboardType: TextInputType.text,
             style: const TextStyle(fontSize: 14),
             decoration: InputDecoration(
               hintText: 'contoh: 12 atau Saya beli 2 apel dan 5 jeruk',
-              hintStyle: TextStyle(color: Colors.pink.shade200, fontSize: 13),
+              hintStyle: TextStyle(
+                fontSize: 13,
+                color: Colors.deepPurple.shade200,
+              ),
               filled: true,
               fillColor: Colors.white,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: Colors.pink.shade100),
+                borderSide: BorderSide(color: Colors.deepPurple.shade100),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: Colors.pink.shade100),
+                borderSide: BorderSide(color: Colors.deepPurple.shade100),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
-                borderSide: const BorderSide(color: Color(0xFFE91E63), width: 1.5),
+                borderSide: BorderSide(color: Colors.deepPurple[300]!, width: 1.5),
               ),
               errorText: _errorText,
             ),
           ),
           const SizedBox(height: 16),
 
-          // Tombol Jumlahkan
           SizedBox(
             width: double.infinity,
-            height: 50,
             child: ElevatedButton(
               onPressed: _hitungTotal,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFEC407A),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                backgroundColor: Colors.deepPurple[300],
                 foregroundColor: Colors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(14),
                 ),
               ),
               child: const Text(
                 'Jumlahkan',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
           ),
           const SizedBox(height: 24),
 
-          // Tampilan Hasil (Chip Angka & Card Total)
           if (_hasilTotal != null) ...[
-            const Text(
-              'angka yang sudah dimasukkan',
+            Text(
+              'Angka yang Sudah Dimasukkan',
               style: TextStyle(
                 fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
+                fontWeight: FontWeight.w600,
+                color: Colors.deepPurple[400],
               ),
             ),
             const SizedBox(height: 10),
 
-            // Daftar Chip Angka
             Wrap(
               spacing: 10,
               runSpacing: 10,
@@ -165,15 +156,15 @@ class _TotalPageState extends State<TotalPage> {
                 return Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFCE4EC), // Soft pink
+                    color: Colors.deepPurple[50],
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     '$numVal',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFFC2185B),
+                      color: Colors.deepPurple[700],
                     ),
                   ),
                 );
@@ -181,16 +172,15 @@ class _TotalPageState extends State<TotalPage> {
             ),
             const SizedBox(height: 24),
 
-            // Card Result Gradient
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   colors: [
-                    Color(0xFFFFF0F5),
-                    Color(0xFFF3E5F5),
+                    Colors.deepPurple[50]!,
+                    const Color(0xFFF3E5F5),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -198,31 +188,28 @@ class _TotalPageState extends State<TotalPage> {
               ),
               child: Column(
                 children: [
-                  const Text(
+                  Text(
                     'TOTAL KESELURUHAN',
                     style: TextStyle(
                       fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFD81B60),
+                      fontWeight: FontWeight.w600,
+                      color: Colors.deepPurple[400],
                       letterSpacing: 0.8,
                     ),
                   ),
                   const SizedBox(height: 10),
                   Text(
                     '$_hasilTotal',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 44,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF2C2C2C),
+                      color: Colors.deepPurple[900],
                     ),
                   ),
                   const SizedBox(height: 10),
                   Text(
                     'dari ${_extractedNumbers.length} angka yang dimasukkan',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.deepPurple[300]),
                   ),
                 ],
               ),

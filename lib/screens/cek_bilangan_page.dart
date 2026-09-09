@@ -42,48 +42,80 @@ class _CekBilanganPageState extends State<CekBilanganPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Cek Bilangan',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.deepPurple[900],
+            ),
           ),
-          const Text(
+          Text(
             'Cari tahu ganjil atau genap',
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(fontSize: 13, color: Colors.deepPurple[300]),
           ),
           const SizedBox(height: 20),
-          const Text(
+          Text(
             'Input Bilangan',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              color: Colors.deepPurple[700],
+            ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           TextField(
             controller: _controller,
             keyboardType: TextInputType.number,
+            style: const TextStyle(fontSize: 14),
             decoration: InputDecoration(
               hintText: 'contoh: 17',
+              hintStyle: TextStyle(
+                fontSize: 13,
+                color: Colors.deepPurple.shade200,
+              ),
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Colors.deepPurple.shade100),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Colors.deepPurple.shade100),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Colors.deepPurple[300]!, width: 1.5),
               ),
               errorText: _errorText,
             ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _cekBilangan,
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                backgroundColor: Colors.pink[300],
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                backgroundColor: Colors.deepPurple[300],
                 foregroundColor: Colors.white,
+                elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
               ),
-              child: const Text('Cek Bilangan'),
+              child: const Text(
+                'Cek Bilangan',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           if (_angkaDicek != null) _buildHasilCard(),
         ],
       ),
@@ -95,7 +127,6 @@ class _CekBilanganPageState extends State<CekBilanganPage> {
     final warnaBg = genap ? const Color(0xFFE4F7EE) : const Color(0xFFFFE1EC);
     final warnaTeks = genap ? const Color(0xFF4CAF7D) : const Color(0xFFD93B68);
     final label = genap ? 'Genap' : 'Ganjil';
-    final icon = genap ? '🍃' : '🌸';
     final keterangan = genap
         ? 'habis dibagi 2, sisa 0'
         : 'tidak habis dibagi 2, sisa 1';
@@ -109,16 +140,11 @@ class _CekBilanganPageState extends State<CekBilanganPage> {
       ),
       child: Column(
         children: [
-          CircleAvatar(
-            radius: 26,
-            backgroundColor: Colors.white,
-            child: Text(icon, style: const TextStyle(fontSize: 22)),
-          ),
-          const SizedBox(height: 8),
           Text(
             'Bilangan $_angkaDicek',
-            style: const TextStyle(color: Colors.grey, fontSize: 12),
+            style: TextStyle(color: warnaTeks.withOpacity(0.75), fontSize: 12),
           ),
+          const SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(
@@ -127,9 +153,10 @@ class _CekBilanganPageState extends State<CekBilanganPage> {
               color: warnaTeks,
             ),
           ),
+          const SizedBox(height: 4),
           Text(
             keterangan,
-            style: const TextStyle(color: Colors.grey, fontSize: 12),
+            style: TextStyle(color: warnaTeks.withOpacity(0.75), fontSize: 12),
           ),
         ],
       ),
