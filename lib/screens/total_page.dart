@@ -74,7 +74,7 @@ class _TotalPageState extends State<TotalPage> {
                 ),
               ),
               SizedBox(width: 6),
-              Text('✨', style: TextStyle(fontSize: 20)),
+              
             ],
           ),
           const SizedBox(height: 2),
