@@ -1,19 +1,33 @@
 {
     "configurations": [
         {
+<<<<<<< HEAD
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**"
+=======
+            "name": "windows-gcc-x64",
+            "includePath": [
+                "${workspaceFolder}/linux/flutter/ephemeral/**"
+>>>>>>> 785d3191f500b56be47254712014e4a6831679f1
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
+<<<<<<< HEAD
             "compilerPath": "D:\\Application\\tdm64-gcc\\bin\\gcc.exe",
             "cStandard": "gnu17",
             "cppStandard": "gnu++14",
             "intelliSenseMode": "windows-gcc-x64"
+=======
+            "windowsSdkVersion": "10.0.26100.0",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-gcc-x64",
+            "compilerPath": "C:/msys64/mingw64/bin/gcc.exe"
+>>>>>>> 785d3191f500b56be47254712014e4a6831679f1
         }
     ],
     "version": 4
