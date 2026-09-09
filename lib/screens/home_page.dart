@@ -6,9 +6,10 @@ class HomePage extends StatelessWidget {
   // Data kelompok disimpan statis di sini.
   // Ganti sesuai anggota kelompok kamu masing-masing.
   final List<Map<String, String>> anggota = const [
-    {'role': 'Ketua', 'nama': 'Putri Karina Tumanggor', 'nim': '124240047'},
-    {'role': 'Anggota', 'nama': 'Bagas Prayoga', 'nim': '21120xxx'},
-    {'role': 'Anggota', 'nama': 'Citra Dewi', 'nim': '21120xxx'},
+    {'role': 'Anggota 1', 'nama': 'Putri Karina Tumanggor', 'NIM': '124240047'},
+    {'role': 'Anggota 2', 'nama': 'Rachma Alycia Nugrahanto', 'NIM': '124240072'},
+    {'role': 'Anggota 3', 'nama': 'Flavia Domitilla Alva Anggita', 'NIM': '124240123'},
+    {'role': 'Anggota 4', 'nama': 'Aleyda Azkia Firani Masyithah', 'NIM': '124240130'},
   ];
 
   @override
@@ -19,7 +20,7 @@ class HomePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Kelompok 3',
+            'Kelompok 9 september',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
           Text(
