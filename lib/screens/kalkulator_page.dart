@@ -8,14 +8,84 @@ class KalkulatorPage extends StatefulWidget {
 }
 
 class _KalkulatorPageState extends State<KalkulatorPage> {
-  String _display = '0'; // angka yang sedang diketik / hasil
+  String _display = '0';
   String _expression = ''; // teks kecil di atas, misal "12 + 8"
   double? _angkaPertama;
   String? _operator;
-  bool _mulaiAngkaBaru = false;
+  bool _mulaiAngkaBaru = false; //input operasi angka kedua merupakan angka baru
+  bool _isError = false;
+
+  String _formatRaw(double value) {
+    if (value.isNaN || value.isInfinite) return 'Error';
+    if (value == 0) return '0';
+
+    final bool negatif = value.isNegative;
+    final double absVal = value.abs();
+
+    final String expStr = absVal.toStringAsExponential(15);
+    final int eIndex = expStr.indexOf('e');
+    final String digit = expStr.substring(0, eIndex).replaceAll('.', '');
+    final int exponent = int.parse(expStr.substring(eIndex + 1));
+
+    // posisi titik desimal dihitung dari digit paling kiri
+    final int titikDesimal = 1 + exponent;
+
+    String s;
+    if (titikDesimal <= 0) {
+      s = '0.${'0' * (-titikDesimal)}$digit';
+    } else if (titikDesimal >= digit.length) {
+      s = digit + ('0' * (titikDesimal - digit.length));
+    } else {
+      s = '${digit.substring(0, titikDesimal)}.${digit.substring(titikDesimal)}';
+    }
+
+    if (s.contains('.')) {
+      s = s.replaceAll(RegExp(r'0+$'), '');
+      s = s.replaceAll(RegExp(r'\.$'), '');
+    }
+
+    s = s.replaceAll('.', ','); // koma sebagai pemisah desimal
+    return negatif ? '-$s' : s;
+  }
+
+  /// Menambahkan titik pemisah ribuan khusus untuk TAMPILAN,
+  /// tanpa mengubah _display "mentah" yang dipakai untuk perhitungan.
+  /// Contoh: "1000000000000" -> "1.000.000.000.000"
+  String _formatTampilan(String raw) {
+    if (raw.isEmpty) return '0';
+    if (raw == 'Error') return raw;
+
+    final bool negatif = raw.startsWith('-');
+    final String tanpaTanda = negatif ? raw.substring(1) : raw;
+
+    final List<String> bagian = tanpaTanda.split(',');
+    final String bagianBulat = bagian[0];
+    final String? bagianDesimal = bagian.length > 1 ? bagian[1] : null;
+
+    final String dibalik = bagianBulat.split('').reversed.join();
+    final List<String> potongan = [];
+    for (int i = 0; i < dibalik.length; i += 3) {
+      final int akhir = (i + 3 > dibalik.length) ? dibalik.length : i + 3;
+      potongan.add(dibalik.substring(i, akhir));
+    }
+    final String hasilBulat = potongan.join('.').split('').reversed.join();
+
+    String hasilAkhir = hasilBulat.isEmpty ? '0' : hasilBulat;
+    if (bagianDesimal != null) {
+      hasilAkhir += ',$bagianDesimal';
+    }
+    if (negatif) hasilAkhir = '-$hasilAkhir';
+
+    return hasilAkhir;
+  }
+
+  // ==========================================================
+  // AKSI TOMBOL
+  // ==========================================================
 
   void _tekanAngka(String angka) {
     setState(() {
+      _isError = false;
       if (_display == '0' || _mulaiAngkaBaru) {
         _display = angka;
         _mulaiAngkaBaru = false;
@@ -25,26 +95,90 @@ class _KalkulatorPageState extends State<KalkulatorPage> {
     });
   }
 
-  void _tekanOperator(String operator) {
+  void _tekanKoma() {
     setState(() {
-      _angkaPertama = double.parse(_display);
+      _isError = false;
+      if (_mulaiAngkaBaru) {
+        _display = '0,';
+        _mulaiAngkaBaru = false;
+      } else if (_display.isEmpty || _display == '-') {
+        _display += '0,';
+      } else if (!_display.contains(',')) {
+        _display += ',';
+      }
+    });
+  }
+
+  void _tekanPlusMinus() {
+    setState(() {
+      _isError = false;
+      if (_display == '0' || _mulaiAngkaBaru) {
+        _display = '-';
+        _mulaiAngkaBaru = false;
+      } else if (_display.startsWith('-')) {
+        _display = _display.substring(1);
+      } else {
+        _display = '-$_display';
+      }
+    });
+  }
+
+  void _hapusSatuDigit() {
+    if (_mulaiAngkaBaru) return; // tidak ada yang bisa dihapus di kondisi ini
+    setState(() {
+      _isError = false;
+      if (_display.length <= 1 || _display == '-') {
+        _display = '0';
+      } else {
+        _display = _display.substring(0, _display.length - 1);
+      }
+    });
+  }
+
+  void _tekanOperator(String operator) {
+    // Validasi: pastikan angka yang sedang tampil benar-benar bisa
+    // diubah jadi angka sebelum operator disimpan.
+    final double? angka = double.tryParse(_display.replaceAll(',', '.'));
+    if (angka == null) {
+      _tampilkanError('Masukkan angka yang benar');
+      return;
+    }
+
+    setState(() {
+      _isError = false;
+      _angkaPertama = angka;
       _operator = operator;
-      _expression = '$_display $operator';
+      _expression = '${_formatTampilan(_display)} $operator';
       _mulaiAngkaBaru = true;
+    });
+  }
+
+  void _tampilkanError(String pesan) {
+    setState(() {
+      _isError = true;
+      _display = pesan;
+      _expression = '';
+      _angkaPertama = null;
+      _operator = null;
+      _mulaiAngkaBaru = false;
     });
   }
 
   void _tekanSama() {
     if (_angkaPertama == null || _operator == null) return;
 
-    final angkaKedua = double.parse(_display);
-    double hasil;
+    final double? angkaKedua = double.tryParse(_display.replaceAll(',', '.'));
+    if (angkaKedua == null) {
+      _tampilkanError('Masukkan angka yang benar');
+      return;
+    }
 
+    double hasil;
     switch (_operator) {
       case '+':
         hasil = _angkaPertama! + angkaKedua;
         break;
-      case '−':
+      case '-':
         hasil = _angkaPertama! - angkaKedua;
         break;
       case '×':
@@ -52,10 +186,7 @@ class _KalkulatorPageState extends State<KalkulatorPage> {
         break;
       case '÷':
         if (angkaKedua == 0) {
-          setState(() {
-            _display = 'Error';
-            _expression = 'Tidak bisa dibagi 0';
-          });
+          _tampilkanError('Tidak bisa dibagi 0');
           return;
         }
         hasil = _angkaPertama! / angkaKedua;
@@ -65,11 +196,9 @@ class _KalkulatorPageState extends State<KalkulatorPage> {
     }
 
     setState(() {
-      _expression = '$_expression $_display =';
-      // buang .0 kalau hasilnya bilangan bulat
-      _display = hasil == hasil.roundToDouble()
-          ? hasil.toInt().toString()
-          : hasil.toString();
+      _isError = false;
+      _expression = '$_expression ${_formatTampilan(_display)} =';
+      _display = _formatRaw(hasil); // simpan mentah, siap dipakai hitung lanjut
       _angkaPertama = null;
       _operator = null;
       _mulaiAngkaBaru = true;
@@ -78,6 +207,7 @@ class _KalkulatorPageState extends State<KalkulatorPage> {
 
   void _tekanClear() {
     setState(() {
+      _isError = false;
       _display = '0';
       _expression = '';
       _angkaPertama = null;
@@ -86,120 +216,153 @@ class _KalkulatorPageState extends State<KalkulatorPage> {
     });
   }
 
+  // ==========================================================
+  // UI
+  // ==========================================================
+
+  Widget _tombolKalkulator(
+    String teks, {
+    bool isOperator = false,
+    bool isHasil = false,
+    bool isFungsi = false,
+    int flex = 1,
+  }) {
+    return Expanded(
+      flex: flex,
+      child: Padding(
+        padding: const EdgeInsets.all(5),
+        child: ElevatedButton(
+          onPressed: () {
+            if (teks == 'C') {
+              _tekanClear();
+            } else if (teks == '=') {
+              _tekanSama();
+            } else if (teks == '⌫') {
+              _hapusSatuDigit();
+            } else if (teks == '±') {
+              _tekanPlusMinus();
+            } else if (teks == ',') {
+              _tekanKoma();
+            } else if (isOperator) {
+              _tekanOperator(teks);
+            } else {
+              _tekanAngka(teks);
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size(70, 65),
+            elevation: 0,
+            backgroundColor: isHasil
+                ? const Color(0xFF1FA98D)
+                : isOperator
+                    ? const Color(0xFFD8CCF3)
+                    : isFungsi
+                        ? const Color(0xFFE0E0E0)
+                        : const Color(0xFFFCE4EC),
+            foregroundColor: isHasil ? Colors.white : Colors.black87,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+          child: Text(
+            teks,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _barisTombol(List<Widget> tombol) {
+    return Expanded(child: Row(children: tombol));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          // Layar tampilan
+          // DISPLAY HASIL
           Container(
             width: double.infinity,
+            height: 150,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.pink[400]!, Colors.pink[200]!],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: _isError ? Colors.red.shade400 : Colors.pink.shade400,
               borderRadius: BorderRadius.circular(20),
             ),
+            alignment: Alignment.centerRight,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  _expression,
-                  style: const TextStyle(color: Colors.white70, fontSize: 14),
-                ),
+                if (_expression.isNotEmpty)
+                  Text(
+                    _expression,
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 16,
+                    ),
+                  ),
                 const SizedBox(height: 4),
-                Text(
-                  _display,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 34,
-                    fontWeight: FontWeight.bold,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    _isError ? _display : _formatTampilan(_display),
+                    style: TextStyle(
+                      fontSize: _isError ? 22 : 40,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
           const SizedBox(height: 16),
-          // Keypad 4x4
-          Expanded(child: _buildKeypad()),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildKeypad() {
-    final tombol = [
-      ['7', '8', '9', '÷'],
-      ['4', '5', '6', '×'],
-      ['1', '2', '3', '−'],
-      ['C', '0', '=', '+'],
-    ];
-
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-      ),
-      itemCount: 16,
-      itemBuilder: (context, index) {
-        final baris = index ~/ 4;
-        final kolom = index % 4;
-        final label = tombol[baris][kolom];
-        return _buildTombol(label);
-      },
-    );
-  }
-
-  Widget _buildTombol(String label) {
-    final isOperator = ['+', '−', '×', '÷'].contains(label);
-    final isEqual = label == '=';
-    final isClear = label == 'C';
-
-    Color bgColor = Colors.pink[50]!;
-    Color textColor = Colors.black87;
-
-    if (isOperator) {
-      bgColor = const Color(0xFFF1EAFF);
-      textColor = const Color(0xFF8B5CF6);
-    } else if (isEqual) {
-      bgColor = const Color(0xFF4CAF7D);
-      textColor = Colors.white;
-    } else if (isClear) {
-      bgColor = const Color(0xFFFFE3E3);
-      textColor = const Color(0xFFE0567A);
-    }
-
-    return Material(
-      color: bgColor,
-      borderRadius: BorderRadius.circular(14),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(14),
-        onTap: () {
-          if (isClear) {
-            _tekanClear();
-          } else if (isEqual) {
-            _tekanSama();
-          } else if (isOperator) {
-            _tekanOperator(label);
-          } else {
-            _tekanAngka(label);
-          }
-        },
-        child: Center(
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: textColor,
+          // TOMBOL KALKULATOR
+          Expanded(
+            child: Column(
+              children: [
+                _barisTombol([
+                  _tombolKalkulator('±', isFungsi: true),
+                  _tombolKalkulator(',', isFungsi: true),
+                  _tombolKalkulator('⌫', isFungsi: true),
+                  _tombolKalkulator('C', isFungsi: true),
+                ]),
+                _barisTombol([
+                  _tombolKalkulator('7'),
+                  _tombolKalkulator('8'),
+                  _tombolKalkulator('9'),
+                  _tombolKalkulator('÷', isOperator: true),
+                ]),
+                _barisTombol([
+                  _tombolKalkulator('4'),
+                  _tombolKalkulator('5'),
+                  _tombolKalkulator('6'),
+                  _tombolKalkulator('×', isOperator: true),
+                ]),
+                _barisTombol([
+                  _tombolKalkulator('1'),
+                  _tombolKalkulator('2'),
+                  _tombolKalkulator('3'),
+                  _tombolKalkulator('-', isOperator: true),
+                ]),
+                _barisTombol([
+                  _tombolKalkulator('0', flex: 2),
+                  _tombolKalkulator('=', isHasil: true),
+                  _tombolKalkulator('+', isOperator: true),
+                ]),
+              ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }
