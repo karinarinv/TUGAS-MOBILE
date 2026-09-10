@@ -26,7 +26,8 @@ class _TotalPageState extends State<TotalPage> {
       return;
     }
 
-    RegExp regExp = RegExp(r'\d');
+    // Mengambil deretan angka utuh (\d+) yang terpisah oleh spasi/huruf/simbol
+    RegExp regExp = RegExp(r'\d+');
     Iterable<Match> matches = regExp.allMatches(input);
 
     List<int> numbers = matches.map((m) => int.parse(m.group(0)!)).toList();
@@ -40,6 +41,7 @@ class _TotalPageState extends State<TotalPage> {
       return;
     }
 
+    // Menjumlahkan seluruh bilangan yang diekstrak
     int total = numbers.reduce((a, b) => a + b);
 
     setState(() {
@@ -92,7 +94,7 @@ class _TotalPageState extends State<TotalPage> {
             keyboardType: TextInputType.text,
             style: const TextStyle(fontSize: 14),
             decoration: InputDecoration(
-              hintText: 'contoh: 12 atau Saya beli 2 apel dan 5 jeruk',
+              hintText: 'contoh: Tugas1 M0b1l3 2026',
               hintStyle: TextStyle(
                 fontSize: 13,
                 color: Colors.deepPurple.shade200,
@@ -208,7 +210,7 @@ class _TotalPageState extends State<TotalPage> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'dari ${_extractedNumbers.length} angka yang dimasukkan',
+                    'dari ${_extractedNumbers.length} bilangan yang dimasukkan',
                     style: TextStyle(fontSize: 12, color: Colors.deepPurple[300]),
                   ),
                 ],
