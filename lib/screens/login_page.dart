@@ -1,4 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
+
 import '../main.dart';
 
 class LoginPage extends StatefulWidget {
@@ -168,8 +171,11 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 12),
                           Row(
                             children: [
-                              Icon(Icons.error_outline,
-                                  color: Colors.red[400], size: 18),
+                              Icon(
+                                Icons.error_outline,
+                                color: Colors.red[400],
+                                size: 18,
+                              ),
                               const SizedBox(width: 6),
                               Expanded(
                                 child: Text(

@@ -6,9 +6,21 @@ class HomePage extends StatelessWidget {
   // Data kelompok kami ges
   final List<Map<String, String>> anggota = const [
     {'role': 'Anggota 1', 'nama': 'Putri Karina Tumanggor', 'nim': '124240047'},
-    {'role': 'Anggota 2', 'nama': 'Rachma Alycia Nugrahanto', 'nim': '124240072'},
-    {'role': 'Anggota 3', 'nama': 'Flavia Domitilla Alva Anggita', 'nim': '124240123'},
-    {'role': 'Anggota 4', 'nama': 'Aleyda Azkia Firani Masyithah', 'nim': '124240130'},
+    {
+      'role': 'Anggota 2',
+      'nama': 'Rachma Alycia Nugrahanto',
+      'nim': '124240072',
+    },
+    {
+      'role': 'Anggota 3',
+      'nama': 'Flavia Domitilla Alva Anggita',
+      'nim': '124240123',
+    },
+    {
+      'role': 'Anggota 4',
+      'nama': 'Aleyda Azkia Firani Masyithah',
+      'nim': '124240130',
+    },
   ];
 
   @override
@@ -38,7 +50,7 @@ class HomePage extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.pink[50],
                     borderRadius: BorderRadius.circular(16),
-                  ),  
+                  ),
                   child: Row(
                     children: [
                       CircleAvatar(

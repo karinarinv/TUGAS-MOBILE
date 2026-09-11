@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 class CekBilanganPage extends StatefulWidget {
@@ -9,12 +11,12 @@ class CekBilanganPage extends StatefulWidget {
 
 class _CekBilanganPageState extends State<CekBilanganPage> {
   final TextEditingController _controller = TextEditingController();
-  int? _angkaDicek;
+  BigInt? _angkaDicek;
   bool? _isGenap;
   String? _errorText;
 
   void _cekBilangan() {
-    final input = int.tryParse(_controller.text.trim());
+    final input = BigInt.tryParse(_controller.text.trim());
     if (input == null) {
       setState(() {
         _errorText = 'Masukkan angka yang valid';
@@ -25,7 +27,7 @@ class _CekBilanganPageState extends State<CekBilanganPage> {
     setState(() {
       _errorText = null;
       _angkaDicek = input;
-      _isGenap = input % 2 == 0;
+      _isGenap = input % BigInt.from(2) == BigInt.zero;
     });
   }
 
@@ -76,7 +78,10 @@ class _CekBilanganPageState extends State<CekBilanganPage> {
               ),
               filled: true,
               fillColor: Colors.white,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 14,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
                 borderSide: BorderSide(color: Colors.deepPurple.shade100),
@@ -87,7 +92,10 @@ class _CekBilanganPageState extends State<CekBilanganPage> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: Colors.deepPurple[300]!, width: 1.5),
+                borderSide: BorderSide(
+                  color: Colors.deepPurple[300]!,
+                  width: 1.5,
+                ),
               ),
               errorText: _errorText,
             ),
@@ -108,10 +116,7 @@ class _CekBilanganPageState extends State<CekBilanganPage> {
               ),
               child: const Text(
                 'Cek Bilangan',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
           ),
