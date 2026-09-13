@@ -1,4 +1,3 @@
-// total_page.dart
 import 'package:flutter/material.dart';
 
 class TotalPage extends StatefulWidget {
@@ -141,12 +140,13 @@ class _TotalPageState extends State<TotalPage> {
           const SizedBox(height: 24),
 
           if (_hasilTotal != null) ...[
+            // Menampilkan info berapa total angka yang terdeteksi
             Text(
-              'Angka yang Sudah Dimasukkan',
+              'Terdapat ${_extractedNumbers.length} angka:',
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: Colors.deepPurple[400],
+                color: Colors.deepPurple[700],
               ),
             ),
             const SizedBox(height: 10),
@@ -210,7 +210,7 @@ class _TotalPageState extends State<TotalPage> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'dari ${_extractedNumbers.length} bilangan yang dimasukkan',
+                    'Hasil penjumlahan dari ${_extractedNumbers.length} angka di atas',
                     style: TextStyle(fontSize: 12, color: Colors.deepPurple[300]),
                   ),
                 ],
