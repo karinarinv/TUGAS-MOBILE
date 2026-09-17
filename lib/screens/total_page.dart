@@ -1,3 +1,4 @@
+// total_page.dart
 import 'package:flutter/material.dart';
 
 class TotalPage extends StatefulWidget {
@@ -40,13 +41,13 @@ class _TotalPageState extends State<TotalPage> {
       return;
     }
 
-    // Menjumlahkan seluruh bilangan yang diekstrak
-    int total = numbers.reduce((a, b) => a + b);
+    // UBAH LOGIKA DI SINI: _hasilTotal menyimpan berapa JUMLAH BANYAKNYA angka yang terdeteksi
+    int totalAngkaTerdeteksi = numbers.length;
 
     setState(() {
       _errorText = null;
       _extractedNumbers = numbers;
-      _hasilTotal = total;
+      _hasilTotal = totalAngkaTerdeteksi;
     });
   }
 
@@ -140,7 +141,6 @@ class _TotalPageState extends State<TotalPage> {
           const SizedBox(height: 24),
 
           if (_hasilTotal != null) ...[
-            // Menampilkan info berapa total angka yang terdeteksi
             Text(
               'Terdapat ${_extractedNumbers.length} angka:',
               style: TextStyle(
@@ -200,6 +200,7 @@ class _TotalPageState extends State<TotalPage> {
                     ),
                   ),
                   const SizedBox(height: 10),
+                  // Menampilkan jumlah angka yang ditemukan (misal: 3)
                   Text(
                     '$_hasilTotal',
                     style: TextStyle(
@@ -210,7 +211,7 @@ class _TotalPageState extends State<TotalPage> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'Hasil penjumlahan dari ${_extractedNumbers.length} angka di atas',
+                    'Jumlah angka yang berhasil terdeteksi dari input',
                     style: TextStyle(fontSize: 12, color: Colors.deepPurple[300]),
                   ),
                 ],
