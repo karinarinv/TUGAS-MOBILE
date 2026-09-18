@@ -1,8 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-
-import '../main.dart';
+import 'package:mobile26/main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,7 +17,6 @@ class _LoginPageState extends State<LoginPage> {
   String? _errorText;
   bool _obscurePassword = true;
 
-  // Akun tetap (hardcoded)
   static const String _validUsername = 'admin';
   static const String _validPassword = '1234';
 
